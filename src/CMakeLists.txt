@@ -1,10 +1,16 @@
 set(libeyeter_SRC
-  program.cpp
+  Procedure.cpp
+  Program.cpp
 )
 
 set(libeyeter_HDR
-  ../include/program.h
+  ../include/Procedure.h
+  ../include/Program.h
 )
 
-add_library(libeyeter SHARED ${libeyeter_SRC})
-target_link_libraries(libeyeter m)
+set(pugixml_SRC
+  ../3rdparty/pugixml/src/pugixml.cpp
+)
+
+add_library(eyeter SHARED ${libeyeter_SRC} ${pugixml_SRC})
+target_link_libraries(eyeter)

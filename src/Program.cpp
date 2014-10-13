@@ -1,7 +1,11 @@
-#include "program.h"
+#include <stdexcept>
+
+#include "Program.h"
+#include "Procedure.h"
+
 #include "pugixml.hpp"
-#define PUGIXML_HEADER_ONLY
-#include "pugixml.cpp"
+
+namespace EyeTER {
 
 Program::Program()
 {
@@ -21,7 +25,7 @@ unsigned int Program::getProcedureCount() const
     return procedures_.size();
 }
 
-std::vector<std::string> Program::getProcedures() const
+std::vector<Procedure> Program::getProcedures() const
 {
     return procedures_;
 }
@@ -32,20 +36,20 @@ void Program::loadFromFile(const std::string& file)
     std::string namePanel;
 
     if(!doc.load_file(file.c_str()))
-        throw "foo";
+        throw std::runtime_error("Failed to open file");
 
     pugi::xpath_node version = doc.select_single_node("/eyeter");
     version_ = version.node().attribute("version").value();
 
     pugi::xpath_node_set procedures = doc.select_nodes("/procedure");
 
-    for(pugi::xpath_node_set::const_iterator it = procedures.begin(); it != procedures.end(); ++it)
-    {
-        pugi::xpath_node node = *it;
-        procedures_.push_back(node.node().attribute("name").value());
+    for(auto procedure : procedures) {
+        procedures_.push_back(Procedure(procedure));
     }
 }
 
 void Program::loadFromString(const std::string& program)
 {
+}
+
 }
